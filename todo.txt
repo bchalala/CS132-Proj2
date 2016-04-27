@@ -1,0 +1,21 @@
+Class Name Checker
+	- Checks all the names of all the classes, ensures that they are unique.
+
+Class Type Checker
+	- Checks all classes to see if they type check
+	- populates the ClassTypes file
+		- Main Class
+		- 
+
+Class Field Checker
+
+
+Method Type Checker
+	- doesn't evaluate inside the method, just checks the method type and arg types. 
+
+Inside Method Checker
+	- Should know what class it is in, should know 
+	+ statement type checker
+	+ expression type checker
+
+MUST DEAL WITH NESTED BRACKETTED STATEMENTS.
