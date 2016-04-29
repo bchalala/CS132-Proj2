@@ -15,6 +15,10 @@ class Burrito {
     public boolean compute() {
         return true;
     }
+
+    public int ComputeBac(int num, int nums) {
+        return 1;
+    }
 }
 
 class Fac extends Burrito {
@@ -24,12 +28,18 @@ class Fac extends Burrito {
     int k;
     Fac hi;
 
-    public int ComputeFac(int num, int nums){
+    public int ComputeFac(int num, Burrito nums){
         int num_aux;
         if (num < 1)
             num_aux = 1 ;
         else
             num_aux = num * (this.ComputeFac(num-1)) ;
         return num_aux ;
+    }
+}
+
+class Bac extends Fac {
+    public int ComputeBac(int num, int nums) {
+        return 1;
     }
 }

@@ -29,6 +29,24 @@ public class ClassTypes {
 
 										/* START CLASS METHOD FUNCTIONS */
 
+	// Returns method type and args if the method exists in c or in parents of c.
+	// If it fails, then it exits the program with a type error.
+	public static Vector<Pair<String, ExpType>> getMethodInfo(String c, String m) {
+		if (c.equals("")) {
+			System.out.println("Type Error");
+			System.exit(1);
+		}
+
+		// Checks for the correct method. If it exists, returns info. Else, recurses. 
+		Vector<Pair<String, Vector<Pair<String, ExpType>>>> methods = methodMap.get(c);
+		for (Pair<String, Vector<Pair<String, ExpType>>> mds: methods) {
+			if (mds.x.equals(m))
+				return mds.y;
+		}
+
+		return ClassTypes.getMethodInfo(parentMap.get(c), m);
+	}
+
 	// Add arguments and their types to a method. 
 	public static void addMethodName(String c, String m, String id, ExpType t) {
 		System.out.println(c + " " + m + " " + id + " " + t.getID());
@@ -183,6 +201,25 @@ public class ClassTypes {
 
 		ExpType empty = new ExpType(ExpType.Type.ID, "");
 		return empty;
+	}
+
+	public static ExpType getExtFieldType(String c, String id) {
+		// If we hit the bottom, then we know there's no field to access.
+		if (c.equals("")) {
+			System.out.println("Type Error");
+        	System.exit(1);
+		}
+
+		// Searches for the field in class c.
+		Vector<Pair<String, ExpType>> v = fieldMap.get(c);
+		for (Pair<String, ExpType> p: v) {
+			if (p.x.equals(id)) {
+				return p.y;
+			}
+		}
+
+		return getExtFieldType(parentMap.get(c), id);
+
 	}
 
 										/* END CLASS FIELD FUNCTIONS */	
