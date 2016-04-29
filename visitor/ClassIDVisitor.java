@@ -59,6 +59,6 @@ public class ClassIDVisitor extends DepthFirstVisitor {
     * f7 -> "}"
     */
    public void visit(ClassExtendsDeclaration n) {
-      ClassTypes.addClass(n.f1.f0.toString(), n.f1.f0.toString());
+      ClassTypes.addClass(n.f1.f0.toString(), n.f3.f0.toString());
    }
 }

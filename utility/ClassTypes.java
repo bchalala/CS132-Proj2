@@ -27,6 +27,169 @@ public class ClassTypes {
 	// Class -> Parent Class
 	public static HashMap<String, String> parentMap = new HashMap<String, String>();
 
+										/* START CLASS METHOD FUNCTIONS */
+
+	// Add arguments and their types to a method. 
+	public static void addMethodName(String c, String m, String id, ExpType t) {
+		System.out.println(c + " " + m + " " + id + " " + t.getID());
+
+		Vector<Pair<String, Vector<Pair<String, ExpType>>>> v = methodMap.get(c);
+		Vector<Pair<String, ExpType>> v2 = new Vector<Pair<String, ExpType>>();
+		boolean v2defined = false;
+
+		// Get the correct method name
+		int methodnum;
+		for (methodnum = 0; methodnum < v.size(); methodnum++) {
+			Pair<String, Vector<Pair<String, ExpType>>> p = v.elementAt(methodnum);
+			if (p.x.equals(m)) {
+				v2defined = true;
+				v2 = p.y;
+				v.remove(methodnum);
+				break;
+			}
+		}
+
+		// Tried to add arg to not yet defined method
+		if (!v2defined) {
+			System.out.println("Did not define function before adding args");
+			return;
+		}
+
+		// Ensures that all parameters are unique
+		for (Pair<String, ExpType> args: v2) {
+			if (id.equals(args.x)) {
+				System.out.println("Type Error");
+				System.exit(1);
+			}
+		}
+
+		Pair<String, ExpType> newp = new Pair<String, ExpType>(id, t);
+		v2.add(newp);
+		Pair<String, Vector<Pair<String, ExpType>>> method = 
+			new Pair<String, Vector<Pair<String, ExpType>>>(m, v2);
+		v.add(method);
+		methodMap.put(c, v);
+		return;
+	}
+
+	// Add a method & its type
+	public static void addMethodName(String c, String m, ExpType t) {
+		System.out.println(c + " " + m + " " + t.getID());
+		Vector<Pair<String, Vector<Pair<String, ExpType>>>> v = methodMap.get(c);
+
+		// If the method already exists, then there is a type error.
+		for (Pair<String, Vector<Pair<String, ExpType>>> p: v) {
+			if (p.x.equals(m)) {
+				System.out.println("Type Error");
+				System.exit(1);
+			}
+		}
+
+		Vector<Pair<String, ExpType>> methodvec = new Vector<Pair<String, ExpType>>();
+		Pair<String, ExpType> newp = new Pair<String, ExpType>("", t);
+		methodvec.add(newp);
+		Pair<String, Vector<Pair<String, ExpType>>> method = 
+			new Pair<String, Vector<Pair<String, ExpType>>>(m, methodvec);
+		v.add(method);
+		methodMap.put(c, v);
+
+
+	}
+
+	// Checks if a method is defined in parent classes & if it is, it verifies that
+	// the arguments of both are the same.
+
+	// Overriding methods need the same id's and types. 
+	public static void verifyMethodNames() {
+		for (String c: classNames) {
+			Vector<Pair<String, Vector<Pair<String, ExpType>>>> methodL = methodMap.get(c);
+			String parentC = parentMap.get(c);
+			for (Pair<String, Vector<Pair<String, ExpType>>> method: methodL) {
+				checkMethodInParent(method, parentC);
+			}
+		}
+	}
+
+	// Check if method is in parent & if it type checks. If it doesn't, print a type error. 
+	public static void checkMethodInParent(Pair<String, Vector<Pair<String, ExpType>>> method, String c) {
+		if (c.equals(""))
+			return;
+
+		// Check if method is in the method list of class c.
+		Vector<Pair<String, Vector<Pair<String, ExpType>>>> mList = methodMap.get(c);
+		for (Pair<String, Vector<Pair<String, ExpType>>> m: mList) {
+			if (m.x.equals(method.x)) {
+				if (m.y.size() != method.y.size()) {
+					System.out.println("Error with function overloading");
+					System.out.println("Type Error");
+					System.exit(1);
+				}
+				for (int i = 0; i < method.y.size(); i++) {
+					if (m.y.elementAt(i).x != method.y.elementAt(i).x || 
+						!m.y.elementAt(i).y.isEqual(method.y.elementAt(i).y)) {
+						System.out.println("Error with function overloading");
+						System.out.println("Type Error");
+						System.exit(1);
+					}
+				}
+				return;
+			}
+		}
+
+		String newc = parentMap.get(c);
+		checkMethodInParent(method, newc);
+	}
+
+										/* END CLASS METHOD FUNCTIONS */
+
+										/* START CLASS FIELD FUNCTIONS */	
+
+	public static void addFieldName(String c, String id, ExpType t) {
+		// Ensures that field ID is unique
+		Vector<Pair<String, ExpType>> v = fieldMap.get(c);
+		System.out.println("Var name: " + id);
+		for (Pair<String, ExpType> p: v) {
+			if (p.x.equals(id)) {
+				System.out.println("Variable name " + id + " already exists.");
+				System.out.println("Type Error");
+				System.exit(1);
+			}
+		}
+
+		// Adds it to available field names
+		Pair<String, ExpType> np = new Pair<String, ExpType>(id, t);
+		v.add(np);
+		fieldMap.put(c, v);
+	}
+
+	public static boolean isFieldOf(String c, String id) {
+		Vector<Pair<String, ExpType>> v = fieldMap.get(c);
+		for (Pair<String, ExpType> p: v) {
+			if (p.x.equals(id)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static ExpType getFieldType(String c, String id) {
+		Vector<Pair<String, ExpType>> v = fieldMap.get(c);
+		for (Pair<String, ExpType> p: v) {
+			if (p.x.equals(id)) {
+				return p.y;
+			}
+		}
+
+		ExpType empty = new ExpType(ExpType.Type.ID, "");
+		return empty;
+	}
+
+										/* END CLASS FIELD FUNCTIONS */	
+
+
+										/* START CLASS FUNCTIONS */	
+
 	// Class -> Child Subclasses
 	//public static HashMap<String, String> childMap = new HashMap<String, Vector<String>>();
 
@@ -37,6 +200,7 @@ public class ClassTypes {
 				return true;
 		}
 		return false;
+
 	}
 
 	// Returns true if the current is a subtype of the parent class. 
@@ -56,6 +220,7 @@ public class ClassTypes {
 
 		// If the class already exists or extends itself, return false
 		if (ClassTypes.isAClass(c) || c.equals(pC)) {
+			System.out.println("Error adding class.");
 			System.out.println("Type Error");
 			System.exit(1);
 		}
@@ -74,6 +239,11 @@ public class ClassTypes {
 		}
 		*/
 		
+		Vector<Pair<String, Vector<Pair<String, ExpType>>>> mv = 
+			new Vector<Pair<String, Vector<Pair<String, ExpType>>>>();
+		Vector<Pair<String, ExpType>> v = new Vector<Pair<String, ExpType>>();
+		fieldMap.put(c, v);
+		methodMap.put(c, mv);
 		parentMap.put(c, pC);
 		classNames.add(c);
 		return;
@@ -84,7 +254,8 @@ public class ClassTypes {
 	public static void verifyClassHierarchy() {
 		boolean invalidClass = false;
 		for (String c: classNames) {
-			if ((!ClassTypes.verifyClass(parentMap.get(c), c)) || c.equals("mainClass")) {
+			if ((!ClassTypes.verifyClass(parentMap.get(c), c)) || c.equals(mainClass)) {
+				System.out.println("Invalid Class: " + c);
 				System.out.println("Type Error");
 				System.exit(1);
 			}
@@ -107,16 +278,10 @@ public class ClassTypes {
 		return verifyClass(newcurClass, initClass);
 	}
 
-	// Checks if the name is the same as another method in current class
-	// Then does so for all its parent classes. 
-	public static boolean verifyMethodNames() {
-		return true;
-	}
+										/* END CLASS FUNCTIONS */				
 
-	// Verifies that field names are all unique.
-	public static boolean verifyFieldNames() {
-		return true;
-	}
+
+
 
 
 

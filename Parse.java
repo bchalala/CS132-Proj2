@@ -12,15 +12,19 @@ public class Parse {
 			// create the AST from the parse of stdin
 			Goal g = new MiniJavaParser(System.in).Goal();
 
-			// set up a new visitor to traverse the tree
+			// Verify that all class IDs are correct
 			ClassIDVisitor cidvis = new ClassIDVisitor();
 			g.accept(cidvis);
-
-			System.out.println(ClassTypes.mainClass);
 			ClassTypes.verifyClassHierarchy();
-			for (String c: ClassTypes.classNames) {
-				System.out.println(c);
-			}
+
+			// Verify class field types
+			ClassFieldVisitor cfvis = new ClassFieldVisitor();
+			Pair<String, String> empty = new Pair<String, String>("","");
+			g.accept(cfvis, empty);
+
+			// Verify class field types 
+			ClassMethodVisitor cmvis = new ClassMethodVisitor();
+			g.accept(cmvis, empty); 
 		
 		} catch (ParseException e){
 			System.out.println(e.toString());

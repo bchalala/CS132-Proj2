@@ -13,9 +13,11 @@ public class ExpType {
 
 		// Check if the ID is a valid ID. 
 		if (m_type == Type.ID) {
-			if (!ClassTypes.isAClass(id_name))
+			if (!(id.equals("") || ClassTypes.isAClass(id_name)))
 			{
 				System.out.println("Invalid class ID: " + id_name);
+				System.out.println("Type Error");
+				System.exit(1);
 				return;
 			}
 		}
