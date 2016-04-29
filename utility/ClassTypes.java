@@ -77,6 +77,7 @@ public class ClassTypes {
 		// Ensures that all parameters are unique
 		for (Pair<String, ExpType> args: v2) {
 			if (id.equals(args.x)) {
+				System.out.println("adding method error");
 				System.out.println("Type Error");
 				System.exit(1);
 			}
@@ -207,7 +208,7 @@ public class ClassTypes {
 	public static ExpType getExtFieldType(String c, String id) {
 		// If we hit the bottom, then we know there's no field to access.
 		if (c.equals("")) {
-			System.out.println("Can't find ID in field");
+			System.out.println("Can't find ID in field: " + id);
 			System.out.println("Type Error");
         	System.exit(1);
 		}

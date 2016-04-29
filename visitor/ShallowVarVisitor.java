@@ -24,9 +24,9 @@ public class ShallowVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>>
     * f2 -> ";"
     */
    public Pair<String, ExpType> visit(VarDeclaration n) {
-      Pair<String, ExpType> p1 = n.f0.accept(this);
-      Pair<String, ExpType> p2 = n.f1.accept(this);
-      Pair<String, ExpType> pf = new Pair(p2.x, p1.y);
+      Pair<String, ExpType> p = n.f0.accept(this);
+      String id = n.f1.f0.toString();
+      Pair<String, ExpType> pf = new Pair(id, p.y);
       return pf;
    }
 
@@ -74,6 +74,8 @@ public class ShallowVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>>
     */
   public Pair<String, ExpType> visit(Identifier n) {
       if (!ClassTypes.isAClass(n.f0.toString())) {
+        System.out.println(n.f0.toString());
+        System.out.println("Variable identifier error");
         System.out.println("Type Error");
         System.exit(1);
       }

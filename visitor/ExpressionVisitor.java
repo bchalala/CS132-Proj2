@@ -188,6 +188,8 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       // typeVec is the types of all the args whereas methodInfo includes the type of the 
       // method at the head of its list.
       if (typeVec.size() + 1 != methodInfo.size()) {
+        System.out.println(methodInfo.elementAt(0).x);
+        System.out.println(t.elementAt(0).y);
         System.out.println("Incorrect method info (size)");
         System.out.println("Type Error");
         System.exit(1); 
@@ -253,15 +255,21 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
    public ExpType visit(Identifier n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
 
       // Searches for the ID name in the local namespace
-      String name = n.f0.toString();
+      String idname = n.f0.toString();
+      
+
       for (Pair<String, ExpType> p: argu.y) {
-          if (p.x.equals(name))
+          String posid = p.x;
+          if (idname.equals(posid)) {
             return p.y;
+          }
       }
 
+
       // Searches for the field in class & class hierarchy. If its not there, the 
-      // getExtFieldType function will throw a type error because it won't be found.
-      return ClassTypes.getExtFieldType(argu.x, name);
+      // getExtFieldType function will throw a type error because it won't be found. 
+      ExpType t = ClassTypes.getExtFieldType(argu.x, idname);
+      return t;
    }
 
    /**
@@ -290,6 +298,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
    public ExpType visit(ArrayAllocationExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpType t = n.f3.accept(this, argu);
       if (t.getType() != ExpType.Type.INT) {
+        System.out.println("Incorrect array expression");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -324,6 +333,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
    public ExpType visit(NotExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpType t = n.f1.accept(this, argu);
       if (t.getType() != ExpType.Type.BOOLEAN) {
+        System.out.println("not error");
         System.out.println("Type Error");
         System.exit(1);
       }

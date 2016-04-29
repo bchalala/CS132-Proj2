@@ -101,12 +101,15 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       // Get the method information, its type, then remove it from the method info vector
       Vector<Pair<String, ExpType>> methodInfo = ClassTypes.getMethodInfo(argu.x, n.f2.f0.toString());
       ExpType methodtype = methodInfo.elementAt(0).y;
-      methodInfo.remove(0);
 
       // Get the local variables for the function, build the environment, then check the environment.
       LocalVarVisitor lvvis = new LocalVarVisitor();
       Vector<Pair<String, ExpType>> locals = n.f7.accept(lvvis);
+      int s = locals.size();
       locals.addAll(methodInfo);
+      if (s < locals.size())
+        locals.remove(s);
+
       if (!ClassTypes.areNamesUnique(locals)) {
         System.out.println("Locals not unique");
         System.out.println("Type Error");
@@ -158,7 +161,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
     */
    public void visit(AssignmentStatement n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpressionVisitor ev = new ExpressionVisitor();
-      String id = n.f0.toString();
+      String id = n.f0.f0.toString();
       ExpType t1 = ClassTypes.getType(argu.x, id, argu.y);
       ExpType t2 = n.f2.accept(ev, argu);
 
@@ -189,13 +192,15 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       }
       t = n.f5.accept(ev, argu);
       if (t.getType() != ExpType.Type.INT) {
+        System.out.println("Bad array access");
         System.out.println("Type Error");
         System.exit(1);
       }
 
-      String id = n.f0.toString();
+      String id = n.f0.f0.toString();
       t = ClassTypes.getType(argu.x, id, argu.y);
       if (t.getType() != ExpType.Type.INTARR) {
+        System.out.println("Bad array access");
         System.out.println("Type Error");
         System.exit(1);
       }
