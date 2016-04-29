@@ -11,7 +11,7 @@ import utility.*;
  * Provides default methods which visit each node in the tree in depth-first
  * order.  Your visitors may extend this class.
  */
-public class ExpressionVisitor extends GJDepthFirst<ExpType,Pair<String, Vector<Pair<String, ExpType>>>> {
+public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector<Pair<String, ExpType>>>> {
 
    /**
     * f0 -> AndExpression()
@@ -36,7 +36,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType,Pair<String, Vector<
    public ExpType visit(AndExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpType t1 = n.f0.accept(this, argu);
       ExpType t2 = n.f2.accept(this, argu);
-      if (t1.isEqual(t2) && t1.getType() == ExpType.Type.BOOLEAN)
+      if (t1.isEqual(t2) && t1.getType() == ExpType.Type.INT)
         return t1;
       
       // If the types aren't the same do this.
@@ -54,8 +54,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType,Pair<String, Vector<
    public ExpType visit(CompareExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpType t1 = n.f0.accept(this, argu);
       ExpType t2 = n.f2.accept(this, argu);
-      if (t1.isEqual(t2) && t1.getType() == ExpType.Type.BOOLEAN)
-        return t1;
+      if (t1.isEqual(t2) && t1.getType() == ExpType.Type.INT) {
+        return new ExpType(ExpType.Type.BOOLEAN);
+      }
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
@@ -167,8 +168,24 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType,Pair<String, Vector<
       // Retrieves method information (this type checks the method name)
       Vector<Pair<String, ExpType>> methodInfo = ClassTypes.getMethodInfo(t.getID(), method);
 
-      // Use separate visitor to evaluate the method arguments.
-      // IT WILL GO HERE!!!!!
+      // Use separate visitor to retrieve the method argument types.
+      ExpMethodVisitor emvis = new ExpMethodVisitor();
+      Vector<ExpType> typeVec = n.f4.accept(emvis, argu);
+
+      // typeVec is the types of all the args whereas methodInfo includes the type of the 
+      // method at the head of its list.
+      if (typeVec.size() - 1 != methodInfo.size()) {
+        System.out.println("Type Error");
+        System.exit(1); 
+      }
+
+      // Check all types for equality
+      for (int i = 1; i < methodInfo.size()) {
+        if (!typeVec.elementAt(i - 1).isEqual(methodInfo.elementAt(i))) {
+            System.out.println("Type Error");
+            System.exit(1); 
+        }
+      }
 
       // Return the method type
       return methodInfo.elementAt(0).y;
@@ -261,9 +278,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType,Pair<String, Vector<
         System.exit(1);
       }
 
-      return t;
-
-      return _ret;
+      // return intarr type
+      ExpType newt = new ExpType(ExpType.Type.INTARR);
+      return newt;
    }
 
    /**
@@ -300,6 +317,14 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType,Pair<String, Vector<
     * f2 -> ")"
     */
    public ExpType visit(BracketExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
+      return n.f1.accept(this, argu);
+   }
+
+      /**
+    * f0 -> ","
+    * f1 -> Expression()
+    */
+   public ExpType visit(ExpressionRest n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       return n.f1.accept(this, argu);
    }
 

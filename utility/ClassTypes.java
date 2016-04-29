@@ -317,6 +317,29 @@ public class ClassTypes {
 
 										/* END CLASS FUNCTIONS */				
 
+										/* START HELPER FUNCTIONS */
+	public static boolean areNamesUnique(Vector<Pair<String, ExpType>> names) {
+		if (names == null)
+			return true;
+
+		for (int i = 0; i < names.size(); i++) {
+			for (int j = i + 1; j < names.size(); j++) {
+				if (names.elementAt(i).x.equals(names.elementAt(j).x))
+					return false;
+			}
+		}
+	}
+
+	public static ExpType getType(String c, String id, Vector<Pair<String, ExpType>> names) {
+		if (names != null) {
+			for (Pair<String, ExpType> local: names) {
+				if (local.x.equals(id))
+					return local.y;
+			}
+		}
+
+		return getExtFieldType(c, id);
+	}
 
 
 

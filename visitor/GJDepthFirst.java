@@ -265,17 +265,21 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     * f1 -> "["
     * f2 -> "]"
     */
-   public ExpType visit(ArrayType n, A argu) {
-      ExpType t = new ExpType(ExpType.Type.INTARR);
-      return t;
+   public R visit(ArrayType n, A argu) {
+      R _ret=null;
+      n.f0.accept(this, argu);
+      n.f1.accept(this, argu);
+      n.f2.accept(this, argu);
+      return _ret;
    }
 
    /**
     * f0 -> "boolean"
     */
    public R visit(BooleanType n, A argu) {
-      ExpType t = new ExpType(ExpType.Type.BOOLEAN);
-      return t;
+      R _ret=null;
+      n.f0.accept(this, argu);
+      return _ret;
    }
 
    /**

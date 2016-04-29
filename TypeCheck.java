@@ -26,6 +26,10 @@ public class TypeCheck {
 			ClassMethodVisitor cmvis = new ClassMethodVisitor();
 			g.accept(cmvis, empty); 
 			ClassTypes.verifyMethodNames();
+
+			// Now check statements and expressions given an environment
+			StatementVisitor stmtvis = new StatementVisitor();
+			g.accept(stmtvis, null);
 		
 		} catch (ParseException e){
 			System.out.println(e.toString());
