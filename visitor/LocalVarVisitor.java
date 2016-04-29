@@ -19,11 +19,11 @@ public class LocalVarVisitor extends GJNoArguDepthFirst<Vector<Pair<String, ExpT
    //
    public Vector<Pair<String, ExpType>> visit(NodeListOptional n) {
    	Vector<Pair<String, ExpType>> locals = new Vector<Pair<String, ExpType>>();
-  	ShallowVarVisitor svvis = new ShallowVarVisitor();
+  	VarVisitor vvis = new VarVisitor();
     if ( n.present() ) {
          int _count=0;
          for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); ) {
-            locals.add(e.nextElement().accept(svvis));
+            locals.add(e.nextElement().accept(vvis));
          }
       }
          

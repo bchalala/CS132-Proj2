@@ -27,6 +27,7 @@ public class TypeCheck {
 			g.accept(cmvis, empty); 
 			ClassTypes.verifyMethodNames();
 
+
 			// Now check statements and expressions given an environment
 			StatementVisitor stmtvis = new StatementVisitor();
 			g.accept(stmtvis, null);

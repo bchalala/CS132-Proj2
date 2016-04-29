@@ -36,11 +36,11 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
    public ExpType visit(AndExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpType t1 = n.f0.accept(this, argu);
       ExpType t2 = n.f2.accept(this, argu);
-      if (t1.isEqual(t2) && t1.getType() == ExpType.Type.INT)
+      if (t1.isEqual(t2) && t1.getType() == ExpType.Type.BOOLEAN)
         return t1;
       
       // If the types aren't the same do this.
-      System.out.println("Type Error");
+      System.out.println("and exp");
       System.out.println("Type Error");
       System.exit(1);
 
@@ -60,7 +60,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       }
       
       // If the types aren't the same do this.
-      System.out.println("Type Error");
+      System.out.println("comparison");
       System.out.println("Type Error");
       System.exit(1);
       return null;
@@ -78,7 +78,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
         return t1;
       
       // If the types aren't the same do this.
-      System.out.println("Type Error");
+      System.out.println("addition");
       System.out.println("Type Error");
       System.exit(1);
       return null;
@@ -96,7 +96,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
         return t1;
       
       // If the types aren't the same do this.
-      System.out.println("Type Error");
+      System.out.println("subtraction");
       System.out.println("Type Error");
       System.exit(1);
       return null;
@@ -114,7 +114,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
         return t1;
       
       // If the types aren't the same do this.
-      System.out.println("Type Error");
+      System.out.println("mult");
       System.out.println("Type Error");
       System.exit(1);
       return null;
@@ -133,7 +133,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
         return t2;
       
       // If the types aren't the same do this.
-      System.out.println("Type Error");
+      System.out.println("arr access");
       System.out.println("Type Error");
       System.exit(1);
       return null;
@@ -150,7 +150,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
         ExpType tnew = new ExpType(ExpType.Type.INT);
         return tnew;
       }
-      System.out.println("Type Error");
+      System.out.println("arr length");
       System.out.println("Type Error");
       System.exit(1);   
       return null;
@@ -188,8 +188,6 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       // typeVec is the types of all the args whereas methodInfo includes the type of the 
       // method at the head of its list.
       if (typeVec.size() + 1 != methodInfo.size()) {
-        System.out.println(methodInfo.elementAt(0).x);
-        System.out.println(t.elementAt(0).y);
         System.out.println("Incorrect method info (size)");
         System.out.println("Type Error");
         System.exit(1); 
@@ -198,6 +196,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       // Check all types for equality
       for (int i = 1; i < methodInfo.size(); i++) {
         if (!typeVec.elementAt(i - 1).isEqual(methodInfo.elementAt(i).y)) {
+            if (ClassTypes.isASubtype(typeVec.elementAt(i - 1).getID(), methodInfo.elementAt(i).y.getID()))
+              continue;
+            System.out.println("Method: " + method);
             System.out.println("Incorrect method info (element)");
             System.out.println("Type Error");
             System.exit(1); 

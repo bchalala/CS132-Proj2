@@ -50,7 +50,6 @@ public class ClassTypes {
 
 	// Add arguments and their types to a method. 
 	public static void addMethodName(String c, String m, String id, ExpType t) {
-		System.out.println(c + " " + m + " " + id + " " + t.getID());
 
 		Vector<Pair<String, Vector<Pair<String, ExpType>>>> v = methodMap.get(c);
 		Vector<Pair<String, ExpType>> v2 = new Vector<Pair<String, ExpType>>();
@@ -94,7 +93,6 @@ public class ClassTypes {
 
 	// Add a method & its type
 	public static void addMethodName(String c, String m, ExpType t) {
-		System.out.println(c + " " + m + " " + t.getID());
 		Vector<Pair<String, Vector<Pair<String, ExpType>>>> v = methodMap.get(c);
 
 		// If the method already exists, then there is a type error.
@@ -264,20 +262,6 @@ public class ClassTypes {
 			System.out.println("Type Error");
 			System.exit(1);
 		}
-
-		// If class has a parent, adds the child to the parent's child directory.
-		/* I DON'T THINK I NEED THIS.
-		if (!pC.equals("")){
-			Vector<String> childIDs;
-			if (childMap.containsKey(pC))
-				childIDs = childMap.get(pC);
-			else
-				childIDs = new Vector<String>;
-			childIDs.add(c);
-			// Adds elements to maps.
-			childMap.put(pC, childIDs);
-		}
-		*/
 		
 		Vector<Pair<String, Vector<Pair<String, ExpType>>>> mv = 
 			new Vector<Pair<String, Vector<Pair<String, ExpType>>>>();

@@ -165,7 +165,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       ExpType t1 = ClassTypes.getType(argu.x, id, argu.y);
       ExpType t2 = n.f2.accept(ev, argu);
 
-      if (!t1.isEqual(t2)) {
+      if (!t1.isEqual(t2) && !ClassTypes.isASubtype(t2.getID(), t1.getID())) {
         System.out.println("Bad Assignment");
         System.out.println("Type Error");
         System.exit(1);
