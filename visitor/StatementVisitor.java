@@ -35,8 +35,9 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
     */
    public void visit(MainClass n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       LocalVarVisitor lvvis = new LocalVarVisitor();
-      Vector<Pair<String, ExpType>> locals = n.f14.accept(llvis);
+      Vector<Pair<String, ExpType>> locals = n.f14.accept(lvvis);
       if (!ClassTypes.areNamesUnique(locals)) {
+        System.out.println("Locals aren't unique");
         System.out.println("Type Error");
         System.exit(1);
       } 
@@ -98,15 +99,16 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
    public void visit(MethodDeclaration n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
 
       // Get the method information, its type, then remove it from the method info vector
-      Vector<Pair<String, ExpType>> methodInfo = ClassTypes.getMethodInfo(argu.x, f2.f0.toString());
+      Vector<Pair<String, ExpType>> methodInfo = ClassTypes.getMethodInfo(argu.x, n.f2.f0.toString());
       ExpType methodtype = methodInfo.elementAt(0).y;
       methodInfo.remove(0);
 
       // Get the local variables for the function, build the environment, then check the environment.
       LocalVarVisitor lvvis = new LocalVarVisitor();
-      Vector<Pair<String, ExpType>> locals = n.f7.accept(llvis);
+      Vector<Pair<String, ExpType>> locals = n.f7.accept(lvvis);
       locals.addAll(methodInfo);
       if (!ClassTypes.areNamesUnique(locals)) {
+        System.out.println("Locals not unique");
         System.out.println("Type Error");
         System.exit(1);
       } 
@@ -121,6 +123,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       ExpressionVisitor ev = new ExpressionVisitor();
       ExpType t = n.f10.accept(ev, env);
       if (!t.isEqual(methodtype)) {
+        System.out.println("Incorrect return type for function");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -155,11 +158,12 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
     */
    public void visit(AssignmentStatement n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpressionVisitor ev = new ExpressionVisitor();
-      String id = f0.f0.toString();
+      String id = n.f0.toString();
       ExpType t1 = ClassTypes.getType(argu.x, id, argu.y);
       ExpType t2 = n.f2.accept(ev, argu);
 
       if (!t1.isEqual(t2)) {
+        System.out.println("Bad Assignment");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -179,6 +183,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       ExpressionVisitor ev = new ExpressionVisitor();
       ExpType t = n.f2.accept(ev, argu);
       if (t.getType() != ExpType.Type.INT) {
+        System.out.println("Bad array access");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -188,7 +193,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
         System.exit(1);
       }
 
-      String id = f0.f0.toString();
+      String id = n.f0.toString();
       t = ClassTypes.getType(argu.x, id, argu.y);
       if (t.getType() != ExpType.Type.INTARR) {
         System.out.println("Type Error");
@@ -209,6 +214,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       ExpressionVisitor ev = new ExpressionVisitor();
       ExpType t = n.f2.accept(ev, argu);
       if (t.getType() != ExpType.Type.BOOLEAN) {
+        System.out.println("Problem with if else");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -228,6 +234,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       ExpressionVisitor ev = new ExpressionVisitor();
       ExpType t = n.f2.accept(ev, argu);
       if (t.getType() != ExpType.Type.BOOLEAN) {
+        System.out.println("Problem with while loop");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -246,6 +253,7 @@ public class StatementVisitor extends GJVoidDepthFirst<Pair<String, Vector<Pair<
       ExpressionVisitor ev = new ExpressionVisitor();
       ExpType t = n.f2.accept(ev, argu);
       if (t.getType() != ExpType.Type.INT) {
+        System.out.println("Problem with print statement");
         System.out.println("Type Error");
         System.exit(1);
       }

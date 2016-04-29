@@ -41,9 +41,10 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
+      System.out.println("Type Error");
       System.exit(1);
 
-      
+      return null;
    }
 
    /**
@@ -60,7 +61,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
+      System.out.println("Type Error");
       System.exit(1);
+      return null;
    }
 
    /**
@@ -76,7 +79,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
+      System.out.println("Type Error");
       System.exit(1);
+      return null;
    }
 
    /**
@@ -92,7 +97,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
+      System.out.println("Type Error");
       System.exit(1);
+      return null;
    }
 
    /**
@@ -108,7 +115,9 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
+      System.out.println("Type Error");
       System.exit(1);
+      return null;
    }
 
    /**
@@ -120,12 +129,14 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
    public ExpType visit(ArrayLookup n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       ExpType t1 = n.f0.accept(this, argu);
       ExpType t2 = n.f2.accept(this, argu);
-      if (t1.getType() == ExpType.Type.INTARR && t2.getType == ExpType.Type.INT)
+      if (t1.getType() == ExpType.Type.INTARR && t2.getType() == ExpType.Type.INT)
         return t2;
       
       // If the types aren't the same do this.
       System.out.println("Type Error");
+      System.out.println("Type Error");
       System.exit(1);
+      return null;
    }
 
    /**
@@ -139,9 +150,10 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
         ExpType tnew = new ExpType(ExpType.Type.INT);
         return tnew;
       }
-      
+      System.out.println("Type Error");
       System.out.println("Type Error");
       System.exit(1);   
+      return null;
     }
 
    /**
@@ -153,13 +165,14 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
     * f5 -> ")"
     */
    public ExpType visit(MessageSend n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
-      R _ret=null;
       ExpType t = n.f0.accept(this, argu);
 
       // Primary expression must result in a variable of a class.
       if (t.getType() != ExpType.Type.ID) {
+        System.out.println("Incorrect identifier for passing messages");
         System.out.println("Type Error");
         System.exit(1);  
+        return null;
       }
 
       // Gets the name of the method
@@ -174,14 +187,16 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
 
       // typeVec is the types of all the args whereas methodInfo includes the type of the 
       // method at the head of its list.
-      if (typeVec.size() - 1 != methodInfo.size()) {
+      if (typeVec.size() + 1 != methodInfo.size()) {
+        System.out.println("Incorrect method info (size)");
         System.out.println("Type Error");
         System.exit(1); 
       }
 
       // Check all types for equality
-      for (int i = 1; i < methodInfo.size()) {
-        if (!typeVec.elementAt(i - 1).isEqual(methodInfo.elementAt(i))) {
+      for (int i = 1; i < methodInfo.size(); i++) {
+        if (!typeVec.elementAt(i - 1).isEqual(methodInfo.elementAt(i).y)) {
+            System.out.println("Incorrect method info (element)");
             System.out.println("Type Error");
             System.exit(1); 
         }
@@ -239,7 +254,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
 
       // Searches for the ID name in the local namespace
       String name = n.f0.toString();
-      for (<Pair<String, ExpType>> p: argu.y) {
+      for (Pair<String, ExpType> p: argu.y) {
           if (p.x.equals(name))
             return p.y;
       }
@@ -255,6 +270,7 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
    public ExpType visit(ThisExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       // If we are in the main class, then 'this' is a type error
       if (argu.x.equals(ClassTypes.mainClass)) {
+        System.out.println("Invalid this");
         System.out.println("Type Error");
         System.exit(1);
       }
@@ -291,7 +307,11 @@ public class ExpressionVisitor extends GJDepthFirst<ExpType, Pair<String, Vector
     */
    public ExpType visit(AllocationExpression n, Pair<String, Vector<Pair<String, ExpType>>> argu) {
       String classname = n.f1.f0.toString();
-      ClassTypes.isAClass(classname);
+      if (!ClassTypes.isAClass(classname)) {
+        System.out.println("Problem with identifier in new");
+        System.out.println("Type Error");
+        System.exit(1);
+      }
       ExpType t = new ExpType(ExpType.Type.ID, classname);
 
       return t;

@@ -17,16 +17,13 @@ public class LocalVarVisitor extends GJNoArguDepthFirst<Vector<Pair<String, ExpT
    //
    // Auto class visitors--probably don't need to be overridden.
    //
-
    public Vector<Pair<String, ExpType>> visit(NodeListOptional n) {
-
    	Vector<Pair<String, ExpType>> locals = new Vector<Pair<String, ExpType>>();
-  	HelpVarVisitor hvvis = new HelpVarVisitor();
+  	ShallowVarVisitor svvis = new ShallowVarVisitor();
     if ( n.present() ) {
-         R _ret=null;
          int _count=0;
          for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); ) {
-            locals.add(e.nextElement().accept(hvvis));
+            locals.add(e.nextElement().accept(svvis));
          }
       }
          

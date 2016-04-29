@@ -33,6 +33,7 @@ public class ClassTypes {
 	// If it fails, then it exits the program with a type error.
 	public static Vector<Pair<String, ExpType>> getMethodInfo(String c, String m) {
 		if (c.equals("")) {
+			System.out.println("Error getting method info");
 			System.out.println("Type Error");
 			System.exit(1);
 		}
@@ -206,6 +207,7 @@ public class ClassTypes {
 	public static ExpType getExtFieldType(String c, String id) {
 		// If we hit the bottom, then we know there's no field to access.
 		if (c.equals("")) {
+			System.out.println("Can't find ID in field");
 			System.out.println("Type Error");
         	System.exit(1);
 		}
@@ -328,6 +330,8 @@ public class ClassTypes {
 					return false;
 			}
 		}
+
+		return true;
 	}
 
 	public static ExpType getType(String c, String id, Vector<Pair<String, ExpType>> names) {
@@ -340,10 +344,6 @@ public class ClassTypes {
 
 		return getExtFieldType(c, id);
 	}
-
-
-
-
 
 	
 }

@@ -13,7 +13,7 @@ import utility.*;
  * Provides default methods which visit each node in the tree in depth-first
  * order.  Your visitors may extend this class.
  */
-public class HelpVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
+public class ShallowVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
    //
    // Auto class visitors--probably don't need to be overridden.
    //
@@ -26,7 +26,8 @@ public class HelpVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
    public Pair<String, ExpType> visit(VarDeclaration n) {
       Pair<String, ExpType> p1 = n.f0.accept(this);
       Pair<String, ExpType> p2 = n.f1.accept(this);
-      return new Pair(p2.x, p1.y);
+      Pair<String, ExpType> pf = new Pair(p2.x, p1.y);
+      return pf;
    }
 
    /**
@@ -46,7 +47,8 @@ public class HelpVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
     */
    public Pair<String, ExpType> visit(ArrayType n) {
       ExpType t = new ExpType(ExpType.Type.INTARR);
-      return new Pair<String, ExpType>("", t);
+      Pair<String, ExpType> pf = new Pair<String, ExpType>("", t);
+      return pf;
    }
 
    /**
@@ -54,7 +56,8 @@ public class HelpVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
     */
    public Pair<String, ExpType> visit(BooleanType n) {
       ExpType t = new ExpType(ExpType.Type.BOOLEAN);
-      return new Pair<String, ExpType>("", t);
+      Pair<String, ExpType> pf = new Pair<String, ExpType>("", t);
+      return pf;
    }
 
    /**
@@ -62,7 +65,8 @@ public class HelpVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
     */
    public Pair<String, ExpType> visit(IntegerType n) {
       ExpType t = new ExpType(ExpType.Type.INT);
-      return new Pair<String, ExpType>("", t);
+      Pair<String, ExpType> pf = new Pair<String, ExpType>("", t);
+      return pf;
    }
 
    /**
@@ -75,6 +79,7 @@ public class HelpVarVisitor extends GJNoArguDepthFirst<Pair<String, ExpType>> {
       }
 
       ExpType t = new ExpType(ExpType.Type.ID, n.f0.toString());
-      return new Pair<String, ExpType>("", t);
+      Pair<String, ExpType> pf = new Pair<String, ExpType>("", t);
+      return pf;
    }
 }
